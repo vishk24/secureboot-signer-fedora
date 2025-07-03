@@ -16,8 +16,12 @@ modules_path="/usr/lib/modules/$last_installed_kernel_version/misc"
 custom_key_path="/root/signing"
 
 # Debian default public and private key for kernel module signing
-PUB_KEY=/var/lib/shim-signed/mok/MOK.der
-PRIV_KEY=/var/lib/shim-signed/mok/MOK.priv
+#PUB_KEY=/var/lib/shim-signed/mok/MOK.der
+#PRIV_KEY=/var/lib/shim-signed/mok/MOK.priv
+
+#For Fedora
+PUB_KEY=/etc/pki/akmods/certs/public_key.der
+PRIV_KEY=/etc/pki/akmods/private/private_key.priv
 
 # if those don't exist, try using the custom ones that should have been created when install.sh was ran.
 if [ ! -f "$PUB_KEY" ] || [ ! -f "$PRIV_KEY" ] 
