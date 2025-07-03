@@ -6,9 +6,9 @@ then
 	exit 1
 fi
 
-echo "Installing dependencies"
+#echo "Installing dependencies"
 # not 100% sure if gcc-12 is a requirement to build vmware modules, but just in case
-apt-get install -y build-essential linux-headers-$(uname -r) gcc gcc-12 make shim-signed
+#dnf install -y build-essential linux-headers-$(uname -r) gcc gcc-12 make shim-signed
 
 # If the directory doesn't exist, create it.
 mkdir -p /etc/kernel/header_postinst.d
@@ -52,8 +52,13 @@ generate_secureboot_signing_keys_manually()
 # SPDX-License-Identifier: GPL-3.0-only)
 
 # Ubuntu / Debian 10 and later public key pair.
-DEB_PUB_KEY=/var/lib/shim-signed/mok/MOK.der
-DEB_PRIV_KEY=/var/lib/shim-signed/mok/MOK.priv
+#DEB_PUB_KEY=/var/lib/shim-signed/mok/MOK.der
+#DEB_PRIV_KEY=/var/lib/shim-signed/mok/MOK.priv
+
+# Fedora location as of Jul 1 2025
+DEB_PUB_KEY=/etc/pki/akmods/certs/public_key.der
+DEB_PRIV_KEY=/etc/pki/akmods/private/private_key.priv
+
 
 # Check if update-secureboot-policy tool supports required commandline options.
 update_secureboot_policy_supports()
@@ -90,7 +95,11 @@ enroll_key(){
 
 if test ! -f "$DEB_PUB_KEY" || ! test -f "$DEB_PRIV_KEY"; then
     # update-secureboot-policy tool present in the system, but keys were not generated.
-    [ -n "$HAVE_UPDATE_SECUREBOOT_POLICY_TOOL" ] && "$(generate_secureboot_signing_keys_manually)" || "$(enroll_key)"
+    if [ -n "$HAVE_UPDATE_SECUREBOOT_POLICY_TOOL" ]; then 
+        generate_secureboot_signing_keys_manually
+    else
+        enroll_key
+    fi
 fi
 
 ###################
