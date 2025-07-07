@@ -41,7 +41,7 @@ do
 	echo "Compiling module $i"
 	vmware-modconfig --console --build-mod -k "$last_installed_kernel_version" "$i" "$GCC" &> /tmp/"$i"_build.log
 	echo "Signing module $i"
-	sudo /usr/src/linux-headers-$last_installed_kernel_version/scripts/sign-file sha256 "$PRIV_KEY" "$PUB_KEY" "$modules_path/$i.ko"
+	sudo /usr/src/kernels/$last_installed_kernel_version/scripts/sign-file sha256 "$PRIV_KEY" "$PUB_KEY" "$modules_path/$i.ko"
 done
 
 depmod -a "$last_installed_kernel_version"
